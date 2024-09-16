@@ -1,34 +1,45 @@
-.PHONY: all clean fclean re
+# Nom de l'exécutable
+NAME = ft_ping
 
-NAME 		= ft_ping.a
+# Options du compilateur
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -I includes
 
-SRCS 		= src/main.c
-							
-OBJS        = ${SRCS:.c=.o}
+# Dossiers
+SRCDIR = src
+INCDIR = includes
 
-HEADER 		= includes/ft_ping.h
+# Fichiers sources et objets
+SRCS = $(SRCDIR)/main.c $(SRCDIR)/utils.c $(SRCDIR)/icmp.c $(SRCDIR)/stats.c 
+OBJS = $(SRCS:.c=.o)
 
-CC 			= gcc
-FLAGS 		= -Wall -Wextra -Werror
+# Commande pour créer l'exécutable
+all: $(NAME)
 
-LIB 		= ar rc
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lm
 
-RM 			= rm -f
+# Commande pour recompiler uniquement les fichiers modifiés
+$(SRCDIR)/%.o: $(SRCDIR)/%.c $(INCDIR)/ft_ping.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-all:    	${NAME} Makefile
-
-%.o: 		%.c $(HEADER) Makefile 
-			${CC} ${FLAGS} -include${HEADER} -c $< -o $@
-
-$(NAME):    $(OBJS) Makefile
-			${LIB} ${NAME} ${OBJS}
-			${CC} ${FLAGS} ${NAME} -o ft_ping
-
+# Nettoyage des fichiers objets
 clean:
-			${RM} ${OBJS}
-			${RM} ft_ping
+	rm -f $(OBJS)
 
-fclean:		clean
-			${RM} ${NAME}
+# Nettoyage complet (fichiers objets + exécutable)
+fclean: clean
+	rm -f $(NAME)
 
-re:        	fclean all
+# Recompiler tout depuis zéro
+re: fclean all
+
+# Commande pour tester avec l'option -v
+test-v:
+	./$(NAME) -v 127.0.0.1
+
+# Commande pour tester avec l'option -?
+test-help:
+	./$(NAME) -?
+
+.PHONY: all clean fclean re test-v test-help
