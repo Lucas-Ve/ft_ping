@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "../includes/ft_ping.h"
 
 int main(int argc, char **argv)
