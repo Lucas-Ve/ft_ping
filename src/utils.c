@@ -67,7 +67,11 @@ void parsing(int argc, char **argv, char **ip_addr, char *ip_str, size_t ip_str_
                 strncpy(ip_str, *ip_addr, ip_str_len);
                 ip_str[ip_str_len - 1] = '\0'; // Sécurité pour s'assurer que la chaîne est bien terminée
             }
-            printf("Resolved IP address: %s\n", ip_str);
         }
     }
+}
+
+long calculate_time_diff_total(struct timespec *start, struct timespec *end)
+{
+    return ((end->tv_sec - start->tv_sec) * 1000) + ((end->tv_nsec - start->tv_nsec) / 1000000);
 }

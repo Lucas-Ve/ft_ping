@@ -29,8 +29,11 @@ int main(int argc, char *argv[])
     struct icmphdr icmp_hdr;
     int sequence = 0;
 
-    printf("PING %s (%s): 56 data bytes\n", ip_addr, ip_str);
+    printf("PING %s (%s): 56(84) data bytes\n", ip_addr, ip_str);
     signal(SIGINT, handle_sigint);
+    struct timespec start_time, end_time;  // Variables pour capturer le temps global
+    // Capturer le temps de début du programme
+    clock_gettime(CLOCK_MONOTONIC, &start_time);
     while (controleC)
     {
         struct timespec start, end;  // Variables pour enregistrer le temps
@@ -49,8 +52,13 @@ int main(int argc, char *argv[])
     }
     if(controleC == 0)
     {
-       print_final_stats(&stats, ip_addr);
-       close(sockfd);
+        // Capturer le temps de fin du programme
+        clock_gettime(CLOCK_MONOTONIC, &end_time);
+
+        // Calculer le temps total écoulé (en millisecondes)
+        stats.total_time = calculate_time_diff(&start_time, &end_time);
+        print_final_stats(&stats, ip_addr);
+        close(sockfd);
     }
     return 0;
 }

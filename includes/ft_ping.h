@@ -20,8 +20,8 @@ typedef struct {
     int packets_transmitted;
     int packets_received;
     long total_time;  // Temps total pour tous les paquets (en ms)
-    long rtt_min;
-    long rtt_max;
+    double rtt_min;
+    double rtt_max;
     double rtt_sum;
     double rtt_sum_squared;
 } PingStats;
@@ -42,10 +42,12 @@ void set_socket_ttl(int sockfd, int ttl);
 
 // Initialisation des statistiques
 void init_stats(PingStats *stats);
-void record_rtt(PingStats *stats, long rtt);
+void record_rtt(PingStats *stats, double rtt);
 void packet_transmitted(PingStats *stats);
 void packet_received(PingStats *stats);
 void print_final_stats(PingStats *stats, const char *ip_addr);
 double calculate_time_diff(struct timespec *start, struct timespec *end);
+
+long calculate_time_diff_total(struct timespec *start, struct timespec *end);
 
 #endif
