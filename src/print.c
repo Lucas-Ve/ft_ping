@@ -5,7 +5,7 @@ void print_help(void)
     printf("Usage: ft_ping [options] <destination>\n");
     printf("Options:\n");
     printf("  -v       : verbose output\n");
-    printf("  -?       : display this help message\n");
+    printf("  -?  ou -h     : display this help message\n");
     printf("Examples:\n");
     printf("  ft_ping 127.0.0.1\n");
 }

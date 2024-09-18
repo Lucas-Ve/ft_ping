@@ -30,6 +30,7 @@ typedef struct {
     char *ip_addr;
     char ip_str[INET_ADDRSTRLEN];
     int verbose;
+    int errorCount;
 } PingStats;
 
 // Fonction pour afficher l'aide (-?)

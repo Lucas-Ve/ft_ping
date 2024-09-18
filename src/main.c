@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
         if(stats.time_out == 0){
             if(stats.ttl == 1)
                 printf("64 bytes from %s: icmp_seq=%d Time to live exceeded\n", stats.ip_str, sequence);
-            else{
+            else if(stats.errorCount == 0){
                 packet_received(&stats);
                 printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", stats.ip_str, sequence, ttl, calculate_time_diff(&start, &end));
                 record_rtt(&stats, calculate_time_diff(&start, &end));

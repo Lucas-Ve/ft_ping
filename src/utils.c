@@ -33,7 +33,7 @@ void parsing(int argc, char **argv, PingStats *stats)
 {
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "-h") == 0)
+        if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "-?") == 0)
         {
             print_help();
             exit(EXIT_SUCCESS);

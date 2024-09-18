@@ -14,6 +14,7 @@ void init_stats(PingStats *stats) {
     stats->error = 0;
     stats->ip_addr = NULL;
     stats->verbose = 0;
+    stats->errorCount = 0;
 }
 
 // Enregistrer le RTT pour un paquet reçu
