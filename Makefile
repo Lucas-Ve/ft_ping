@@ -10,7 +10,7 @@ SRCDIR = src
 INCDIR = includes
 
 # Fichiers sources et objets
-SRCS = $(SRCDIR)/main.c $(SRCDIR)/utils.c $(SRCDIR)/icmp.c $(SRCDIR)/stats.c 
+SRCS = $(SRCDIR)/main.c $(SRCDIR)/utils.c $(SRCDIR)/icmp.c $(SRCDIR)/stats.c $(SRCDIR)/print.c 
 OBJS = $(SRCS:.c=.o)
 
 # Commande pour créer l'exécutable

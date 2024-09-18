@@ -9,6 +9,11 @@ void init_stats(PingStats *stats) {
     stats->rtt_max = 0;
     stats->rtt_sum = 0.0;
     stats->rtt_sum_squared = 0.0;
+    stats->time_out = 0;
+    stats->ttl = 0;
+    stats->error = 0;
+    stats->ip_addr = NULL;
+    stats->verbose = 0;
 }
 
 // Enregistrer le RTT pour un paquet reçu
@@ -36,7 +41,7 @@ double calculate_time_diff(struct timespec *start, struct timespec *end) {
 }
 
 // Afficher les statistiques finales
-void print_final_stats(PingStats *stats, const char *ip_addr) {
+void print_final_stats(PingStats *stats) {
     // Calcul de la perte de paquets
     int packet_loss = ((stats->packets_transmitted - stats->packets_received) * 100) / stats->packets_transmitted;
     
@@ -45,13 +50,21 @@ void print_final_stats(PingStats *stats, const char *ip_addr) {
     double rtt_mdev = sqrt((stats->rtt_sum_squared / stats->packets_received) - (rtt_avg * rtt_avg));
 
     // Affichage des statistiques
-    printf("\n--- %s ping statistics ---\n", ip_addr);
-    printf("%d packets transmitted, %d received, %d%% packet loss, time %3ldms\n",
-           stats->packets_transmitted, stats->packets_received, packet_loss, stats->total_time);
+    printf("\n--- %s ping statistics ---\n", stats->ip_addr);
+    if(stats->error == 0){
+        printf("%d packets transmitted, %d received, %d%% packet loss, time %3ldms\n",
+               stats->packets_transmitted, stats->packets_received, packet_loss, stats->total_time);
+    }
+    else{
+        printf("%d packets transmitted, %d received, +%d errors, %d%% packet loss, time %3ldms\n",
+               stats->packets_transmitted, stats->packets_received, stats->error, packet_loss, stats->total_time);
+    }
 
-    // Les RTT sont déjà en millisecondes avec des décimales, donc pas besoin de les diviser par 1000
-    printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
-           stats->rtt_min, rtt_avg, stats->rtt_max, rtt_mdev);
+    if(stats->packets_received != 0){
+        // Les RTT sont déjà en millisecondes avec des décimales, donc pas besoin de les diviser par 1000
+        printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
+               stats->rtt_min, rtt_avg, stats->rtt_max, rtt_mdev);
+    }
 }
 
 

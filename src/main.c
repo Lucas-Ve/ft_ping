@@ -6,30 +6,25 @@ int controleC = 1;
 void handle_sigint(int sig)
 {
     (void)sig;
-    // close(sockfd);
     controleC = 0;
-    // exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char *argv[])
 {
     int ttl = 0;
-    char *ip_addr = NULL;
-
     if (argc < 2)
     {
         printf("Error: missing arguments. Use -? for help.\n");
         return 1;
     }
-    char ip_str[INET_ADDRSTRLEN];
-    parsing(argc, argv, &ip_addr, ip_str, sizeof(ip_str));
     PingStats stats;
     init_stats(&stats);  // Initialiser les statistiques
+    parsing(argc, argv, &stats);
     sockfd = create_socket();
     struct icmphdr icmp_hdr;
     int sequence = 0;
 
-    printf("PING %s (%s): 56(84) data bytes\n", ip_addr, ip_str);
+    printf("PING %s (%s): 56(84) data bytes\n", stats.ip_addr, stats.ip_str);
     signal(SIGINT, handle_sigint);
     struct timespec start_time, end_time;  // Variables pour capturer le temps global
     // Capturer le temps de début du programme
@@ -41,13 +36,19 @@ int main(int argc, char *argv[])
         packet_transmitted(&stats);
         // Enregistrer le temps avant l'envoi du paquet
         clock_gettime(CLOCK_MONOTONIC, &start);
-        send_icmp_packet(sockfd, ip_str, &icmp_hdr);
-        receive_icmp_reply(sockfd, &ttl);
+        send_icmp_packet(sockfd, stats.ip_str, &icmp_hdr);
+        receive_icmp_reply(sockfd, &ttl, &stats);
         // Enregistrer le temps après la réception du paquet
         clock_gettime(CLOCK_MONOTONIC, &end);
-        packet_received(&stats);
-        printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", ip_str, sequence, ttl, calculate_time_diff(&start, &end));
-        record_rtt(&stats, calculate_time_diff(&start, &end));
+        if(stats.time_out == 0){
+            if(stats.ttl == 1)
+                printf("64 bytes from %s: icmp_seq=%d Time to live exceeded\n", stats.ip_str, sequence);
+            else{
+                packet_received(&stats);
+                printf("64 bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", stats.ip_str, sequence, ttl, calculate_time_diff(&start, &end));
+                record_rtt(&stats, calculate_time_diff(&start, &end));
+            }
+        }
         sleep(1);
     }
     if(controleC == 0)
@@ -57,7 +58,7 @@ int main(int argc, char *argv[])
 
         // Calculer le temps total écoulé (en millisecondes)
         stats.total_time = calculate_time_diff(&start_time, &end_time);
-        print_final_stats(&stats, ip_addr);
+        print_final_stats(&stats);
         close(sockfd);
     }
     return 0;

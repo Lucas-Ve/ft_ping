@@ -24,6 +24,12 @@ typedef struct {
     double rtt_max;
     double rtt_sum;
     double rtt_sum_squared;
+    int time_out;
+    int ttl;
+    int error;
+    char *ip_addr;
+    char ip_str[INET_ADDRSTRLEN];
+    int verbose;
 } PingStats;
 
 // Fonction pour afficher l'aide (-?)
@@ -33,11 +39,11 @@ void print_help(void);
 int create_socket(void);
 void create_icmp_packet(struct icmphdr *icmp_hdr, int sequence);
 void send_icmp_packet(int sockfd, const char *ip_addr, struct icmphdr *icmp_hdr);
-void receive_icmp_reply(int sockfd, int *ttl);
+void receive_icmp_reply(int sockfd, int *ttl, PingStats *stats);
 unsigned short checksum(void *b, int len);
 int is_valid_ipv4(const char *ip_addr);
 int resolve_hostname_to_ip(const char *hostname, char *ip_str, size_t maxlen);
-void parsing(int argc, char **argv, char **ip_addr, char *ip_str, size_t ip_str_len);
+void parsing(int argc, char **argv, PingStats *stats);
 void set_socket_ttl(int sockfd, int ttl);
 
 // Initialisation des statistiques
@@ -45,9 +51,13 @@ void init_stats(PingStats *stats);
 void record_rtt(PingStats *stats, double rtt);
 void packet_transmitted(PingStats *stats);
 void packet_received(PingStats *stats);
-void print_final_stats(PingStats *stats, const char *ip_addr);
+void print_final_stats(PingStats *stats);
 double calculate_time_diff(struct timespec *start, struct timespec *end);
 
 long calculate_time_diff_total(struct timespec *start, struct timespec *end);
+void print_icmp_err(int type, int code);
+
+void print_icmp_header(struct icmphdr *icmp_hdr);
+void print_ip_header(struct iphdr *ip_hdr);
 
 #endif
