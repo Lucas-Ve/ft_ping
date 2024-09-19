@@ -105,4 +105,12 @@ void receive_icmp_reply(int sockfd, int *ttl, PingStats *stats)
             print_icmp_err(icmp_hdr->type, icmp_hdr->code);  // Affiche le message d'erreur spécifique
         }
     }
+    else if (checksum(icmp_hdr, sizeof(struct icmphdr)) != 0) {
+        stats->errorCount = 1;  // Marquer l'erreur de checksum
+        return;
+    }
+    else if (icmp_hdr->un.echo.id != getpid()) {
+        stats->errorCount = 1;  // Marquer l'erreur de PID
+        return;
+    }
 }
