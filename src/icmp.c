@@ -82,7 +82,6 @@ void receive_icmp_reply(int sockfd, int *ttl, PingStats *stats)
     *ttl = ip_hdr->ttl;
     stats->errorCount = 0;
     // Vérifier s'il y a une erreur ICMP
-    printf("iddddd %d %d\n\n", icmp_hdr->un.echo.id, getpid());
     if (icmp_hdr->type != ICMP_ECHOREPLY && icmp_hdr->type != 1 && icmp_hdr->type != 8)  // Si ce n'est pas une réponse de type Echo ou ICMP de type 1 (Destination Unreachable)
     {
         stats->error++;
@@ -91,7 +90,6 @@ void receive_icmp_reply(int sockfd, int *ttl, PingStats *stats)
         // Afficher l'en-tête IP et ICMP si verbose est activé
         if (stats->verbose == 1)
         {
-            printf("\nError:");
             print_ip_header(ip_hdr);   // Afficher l'en-tête IP
             print_icmp_header(icmp_hdr);  // Afficher l'en-tête ICMP
         }

@@ -92,42 +92,12 @@ void print_icmp_err(int type, int code) {
     }
 }
 
-// void print_ip_header(struct iphdr *ip_hdr)
-// {
-//     char src_ip[INET_ADDRSTRLEN], dest_ip[INET_ADDRSTRLEN];
-//     inet_ntop(AF_INET, &(ip_hdr->saddr), src_ip, INET_ADDRSTRLEN);
-//     inet_ntop(AF_INET, &(ip_hdr->daddr), dest_ip, INET_ADDRSTRLEN);
-
-//     printf("\n--- IP Header ---\n");
-//     printf("Version: %d\n", ip_hdr->version);
-//     printf("Header Length: %d (in 32-bit words)\n", ip_hdr->ihl);
-//     printf("Type Of Service : %d\n", ip_hdr->tos);
-//     printf("Total Length: %d\n", ntohs(ip_hdr->tot_len));
-//     printf("Identification: 0x%x\n", ntohs(ip_hdr->id));
-//     printf("Fragment Offset: %d\n", ip_hdr->frag_off);
-//     printf("Time To Live (TTL): %d\n", ip_hdr->ttl);
-//     printf("Protocol: %d\n", ip_hdr->protocol);
-//     printf("Checksum: %d\n", ip_hdr->check);
-//     printf("Source IP: %s\n", src_ip);
-//     printf("Destination IP: %s\n", dest_ip);
-//     printf("--------------------\n");
-// }
-
-// void print_icmp_header(struct icmphdr *icmp_hdr)
-// {
-//     printf("\n--- ICMP Header ---\n");
-//     printf("Type: %d\n", icmp_hdr->type);
-//     printf("Code: %d\n", icmp_hdr->code);
-//     printf("Checksum: 0x%x\n", ntohs(icmp_hdr->checksum));
-//     printf("--------------------\n");
-// }
-
 // Fonction pour afficher un octet en hexadécimal
 void print_hex_bytes(const unsigned char *data, int length) {
     for (int i = 0; i < length; i++) {
-        printf("%02x ", data[i]);
-        if ((i + 1) % 10 == 0) // Format pour 10 valeurs par ligne
-            printf("\n");
+        printf("%02x", data[i]);
+		if(i % 2 == 1)
+			printf(" ");
     }
     printf("\n");
 }

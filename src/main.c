@@ -23,8 +23,10 @@ int main(int argc, char *argv[])
     sockfd = create_socket();
     struct icmphdr icmp_hdr;
     int sequence = 0;
-
-    printf("PING %s (%s): 56(84) data bytes\n", stats.ip_addr, stats.ip_str);
+    if(stats.verbose == 1)
+        printf("PING %s (%s): 56 data bytes, id 0x%04x = %d\n", stats.ip_addr, stats.ip_str, getpid(), getpid());
+    else
+        printf("PING %s (%s): 56 data bytes\n", stats.ip_addr, stats.ip_str);
     signal(SIGINT, handle_sigint);
     struct timespec start_time, end_time;  // Variables pour capturer le temps global
     // Capturer le temps de début du programme
@@ -32,7 +34,7 @@ int main(int argc, char *argv[])
     while (controleC)
     {
         struct timespec start, end;  // Variables pour enregistrer le temps
-        create_icmp_packet(&icmp_hdr, sequence++);
+        create_icmp_packet(&icmp_hdr, sequence);
         packet_transmitted(&stats);
         // Enregistrer le temps avant l'envoi du paquet
         clock_gettime(CLOCK_MONOTONIC, &start);
@@ -49,6 +51,7 @@ int main(int argc, char *argv[])
                 record_rtt(&stats, calculate_time_diff(&start, &end));
             }
         }
+        sequence++;
         sleep(1);
     }
     if(controleC == 0)

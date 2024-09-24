@@ -51,7 +51,7 @@ void print_final_stats(PingStats *stats) {
     double rtt_mdev = sqrt((stats->rtt_sum_squared / stats->packets_received) - (rtt_avg * rtt_avg));
 
     // Affichage des statistiques
-    printf("\n--- %s ping statistics ---\n", stats->ip_addr);
+    printf("--- %s ping statistics ---\n", stats->ip_addr);
     if(stats->error == 0){
         printf("%d packets transmitted, %d received, %d%% packet loss, time %3ldms\n",
                stats->packets_transmitted, stats->packets_received, packet_loss, stats->total_time);
@@ -63,7 +63,7 @@ void print_final_stats(PingStats *stats) {
 
     if(stats->packets_received != 0){
         // Les RTT sont déjà en millisecondes avec des décimales, donc pas besoin de les diviser par 1000
-        printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3f ms\n",
+        printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n",
                stats->rtt_min, rtt_avg, stats->rtt_max, rtt_mdev);
     }
 }
