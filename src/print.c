@@ -123,8 +123,8 @@ void print_ip_header(struct iphdr *ip_hdr) {
            ip_hdr->ttl,                         // Time to Live
            ip_hdr->protocol,                    // Protocole
            ntohs(ip_hdr->check),                // Checksum de l'en-tête IP
-           src_ip,                              // IP source
-           dest_ip                              // IP destination
+           dest_ip,                              // IP destination
+           src_ip                              // IP source
     );
 }
 
@@ -134,6 +134,6 @@ void print_icmp_header(struct icmphdr *icmp_hdr) {
            icmp_hdr->type,                      // Type ICMP (Echo, Echo Reply, etc.)
            icmp_hdr->code,                      // Code ICMP
            sizeof(struct icmphdr),              // Taille de l'en-tête ICMP
-           ntohs(icmp_hdr->un.echo.id),         // Identifiant (souvent le PID)
+           ntohs(getpid()),         // Identifiant (souvent le PID)
            ntohs(icmp_hdr->un.echo.sequence));  // Numéro de séquence
 }
